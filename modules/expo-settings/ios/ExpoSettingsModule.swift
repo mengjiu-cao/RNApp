@@ -4,23 +4,22 @@ public class ExpoSettingsModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoSettings")
 
-    Events("onChangeTheme")
+    Events("onChange")
 
-    Function("setTheme") { (theme: Theme) -> Void in
-      UserDefaults.standard.set(theme.rawValue, forKey:"theme")
-      sendEvent("onChangeTheme", [
-        "theme": theme.rawValue
+    Function("setFiat") { (theme: FiatType) -> Void in
+      UserDefaults.standard.set(theme.rawValue, forKey:"fiat-key")
+      sendEvent("onChange", [
+        "fiat-key": theme.rawValue
       ])
     }
 
-    Function("getTheme") { () -> String in
-      UserDefaults.standard.string(forKey: "theme") ?? Theme.system.rawValue
+    Function("getFiat") { () -> String in
+      UserDefaults.standard.string(forKey: "fiat-key") ?? FiatType.USD.rawValue
     }
   }
 
-  enum Theme: String, Enumerable {
-    case light
-    case dark
-    case system
+  enum FiatType: String, Enumerable {
+    case USD
+    case HKD
   }
 }

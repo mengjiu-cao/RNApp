@@ -11,15 +11,15 @@ class ExpoSettingsModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoSettings")
 
-    Events("onChangeTheme")
+    Events("onChange")
 
-    Function("setTheme") { theme: Theme ->
-      getPreferences().edit().putString("theme", theme.value).commit()
-      this@ExpoSettingsModule.sendEvent("onChangeTheme", bundleOf("theme" to theme.value))
+    Function("setFiat") { theme: FiatType ->
+      getPreferences().edit().putString("fiat-key", theme.value).commit()
+      this@ExpoSettingsModule.sendEvent("onChange", bundleOf("fiat-key" to theme.value))
     }
 
-    Function("getTheme") {
-      return@Function getPreferences().getString("theme", Theme.SYSTEM.value)
+    Function("getFiat") {
+      return@Function getPreferences().getString("fiat-key", FiatType.USD.value)
     }
   }
 
@@ -31,8 +31,7 @@ class ExpoSettingsModule : Module() {
   }
 }
 
-enum class Theme(val value: String) : Enumerable {
-  LIGHT("light"),
-  DARK("dark"),
-  SYSTEM("system")
+enum class FiatType(val value: String) : Enumerable {
+  USD("usd"),
+  HKD("hkd"),
 }

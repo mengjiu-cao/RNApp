@@ -1,11 +1,10 @@
 import { NativeModule, requireNativeModule } from 'expo';
 
-import { ExpoSettingsModuleEvents } from './ExpoSettings.types';
+import { ExpoSettingsModuleEvents, FiatType } from './ExpoSettings.types';
 
 declare class ExpoSettingsModule extends NativeModule<ExpoSettingsModuleEvents> {
-  PI: number;
-  hello(): string;
-  setValueAsync(value: string): Promise<void>;
+  getFiat(): FiatType;
+  setFiat(value: FiatType): void;
 }
 
 // This call loads the native module object from the JSI.

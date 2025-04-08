@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import { Image, Stack, Text, View, XStack, YStack, useWindowDimensions } from 'tamagui';
 import { FlashList } from '@shopify/flash-list';
@@ -10,43 +10,29 @@ import { FiatRateUSD } from '@/constants/FiatRateUSD';
 import { FiatRateHKD } from '@/constants/FiatRateHKD';
 import AssetItem from '@/components/AssetItem';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-// import { Currency } from './Currency';
-// import { FiatRateUSD } from './FiatRateUSD';
-// import AssetItem from './AssetItem';
-// import SettingNative from '../specs/NativeLocalStorage';
-// import { useFocusEffect } from '@react-navigation/native';
-// import { FiatRateHKD } from '@/const/FiatRateHKD';
+import * as Settings from '@/modules/expo-settings';
+import { FiatType } from '@/modules/expo-settings';
 
 export default function Crypto(): React.JSX.Element {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
-  const [fiat, setFiat] = useState<string | null>(null);
   const insets = useSafeAreaInsets();
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log('Screen was focused');
-      // Do something when the screen is focused
-      const storedValue = 'USD'; // SettingNative?.getItem('fiat-type') ??
-      setFiat(storedValue);
-      return () => {};
-    }, [])
-  );
+  const [fiatType, setFiatType] = useState<FiatType>(Settings.getFiat());
 
   const list = useMemo(() => {
     return Currency.map((item) => {
       const amount = typeof item.amount === 'bigint' ? Number(item.amount) : item.amount;
-      const rate = fiat === 'USD' ? FiatRateUSD.find(i => i.symbol === item.symbol)?.fiat_rate : FiatRateHKD.find(i => i.symbol === item.symbol)?.fiat_rate;
+      const rate = fiatType === 'USD' ? FiatRateUSD.find(i => i.symbol === item.symbol)?.fiat_rate : FiatRateHKD.find(i => i.symbol === item.symbol)?.fiat_rate;
       return {
         icon: item.symbol,
         name: item.name.charAt(0).toUpperCase() + item.name.slice(1),
         addRate: '-3.24%',
         amount: `${item.amount} ${item.symbol}`,
-        fiatValue: `${fiat === 'USD' ? '$' : 'HK$'} ${amount * Number(rate)}`,
+        fiatValue: `${fiatType === 'USD' ? '$' : 'HK$'} ${amount * Number(rate)}`,
       };
     });
-  }, [fiat]);
+  }, [fiatType]);
 
   const Gap = useMemoizedFn(() => <View height={6} />);
 
