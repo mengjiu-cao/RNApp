@@ -15,7 +15,7 @@ class ExpoSettingsModule : Module() {
 
     Function("setFiat") { theme: FiatType ->
       getPreferences().edit().putString("fiat-key", theme.value).commit()
-      this@ExpoSettingsModule.sendEvent("onChange", bundleOf("fiat-key" to theme.value))
+      this@ExpoSettingsModule.sendEvent("onChange", bundleOf("value" to theme.value))
     }
 
     Function("getFiat") {
@@ -32,6 +32,6 @@ class ExpoSettingsModule : Module() {
 }
 
 enum class FiatType(val value: String) : Enumerable {
-  USD("usd"),
-  HKD("hkd"),
+  USD("USD"),
+  HKD("HKD"),
 }

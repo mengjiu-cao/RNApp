@@ -12,6 +12,7 @@ import AssetItem from '@/components/AssetItem';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Settings from '@/modules/expo-settings';
 import { FiatType } from '@/modules/expo-settings';
+import { Pressable } from 'react-native';
 
 export default function Crypto(): React.JSX.Element {
   const layout = useWindowDimensions();
@@ -19,6 +20,14 @@ export default function Crypto(): React.JSX.Element {
   const insets = useSafeAreaInsets();
 
   const [fiatType, setFiatType] = useState<FiatType>(Settings.getFiat());
+
+  useEffect(() => {
+    const subscription = Settings.addDataListener(({ value }) => {
+      setFiatType(value);
+    });
+
+    return () => subscription.remove();
+  }, [setFiatType]);
 
   const list = useMemo(() => {
     return Currency.map((item) => {
@@ -97,10 +106,15 @@ export default function Crypto(): React.JSX.Element {
           <Image source={require('@/assets/images/icon_down_arrow.png')} width={14} height={14} marginRight={4} />
         </XStack>
 
-        <XStack alignItems={'center'} space={2}>
+        <XStack alignItems={'center'} gap={2}>
           <Image source={require('@/assets/images/Scanner@3x.svg.png')} width={30} height={30} padding={4} />
           <Image source={require('@/assets/images/clock_24@3x.svg.png')} width={30} height={30} padding={4} />
-          <Image source={require('@/assets/images/Settings@3x.svg.png')} width={30} height={30} padding={4} />
+          <Pressable onPress={() => {
+            console.log('------------> Settings.toSettingPage()')
+            Settings.toSettingPage()
+          }}>
+            <Image source={require('@/assets/images/Settings@3x.svg.png')} width={30} height={30} padding={4} />
+          </Pressable>
         </XStack>
       </XStack>
       <YStack alignItems={'center'} marginVertical={20}>
@@ -109,7 +123,7 @@ export default function Crypto(): React.JSX.Element {
           <Image source={require('@/assets/images/ic_down_gray.png')} width={14} height={14} />
         </XStack>
         <Image source={require('@/assets/images/Eye@3x.svg.png')} width={17} height={14} marginTop={14} />
-        <XStack alignItems={'center'} space={8}>
+        <XStack alignItems={'center'} gap={8}>
           <Text color={'#gray'} fontSize={14}>--</Text>
           <Stack width={4} height={4} borderRadius={2} backgroundColor={'gray'} />
           <Text color={'#gray'} fontSize={14}>--</Text>

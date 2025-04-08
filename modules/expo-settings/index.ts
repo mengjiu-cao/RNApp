@@ -15,7 +15,7 @@ export function getFiat(): FiatType {
   return ExpoSettingsModule.getFiat();
 }
 
-export function setFiat(theme: FiatType): void {
-  return ExpoSettingsModule.setFiat(theme);
+export function toSettingPage(): void {
+  return ExpoSettingsModule.toSettingPage();
 }
 
