@@ -1,74 +1,175 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import React, { useCallback, useMemo, useState } from 'react';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
+import { Image, Stack, Text, View, XStack, YStack, useWindowDimensions } from 'tamagui';
+import { FlashList } from '@shopify/flash-list';
+import { useMemoizedFn } from 'ahooks';
+import { useFocusEffect } from 'expo-router';
+import { Currency } from '@/constants/Currency';
+import { FiatRateUSD } from '@/constants/FiatRateUSD';
+import { FiatRateHKD } from '@/constants/FiatRateHKD';
+import AssetItem from '@/components/AssetItem';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// import { Currency } from './Currency';
+// import { FiatRateUSD } from './FiatRateUSD';
+// import AssetItem from './AssetItem';
+// import SettingNative from '../specs/NativeLocalStorage';
+// import { useFocusEffect } from '@react-navigation/native';
+// import { FiatRateHKD } from '@/const/FiatRateHKD';
 
-export default function HomeScreen() {
+export default function Crypto(): React.JSX.Element {
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [fiat, setFiat] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('Screen was focused');
+      // Do something when the screen is focused
+      const storedValue = 'USD'; // SettingNative?.getItem('fiat-type') ??
+      setFiat(storedValue);
+      return () => {};
+    }, [])
+  );
+
+  const list = useMemo(() => {
+    return Currency.map((item) => {
+      const amount = typeof item.amount === 'bigint' ? Number(item.amount) : item.amount;
+      const rate = fiat === 'USD' ? FiatRateUSD.find(i => i.symbol === item.symbol)?.fiat_rate : FiatRateHKD.find(i => i.symbol === item.symbol)?.fiat_rate;
+      return {
+        icon: item.symbol,
+        name: item.name.charAt(0).toUpperCase() + item.name.slice(1),
+        addRate: '-3.24%',
+        amount: `${item.amount} ${item.symbol}`,
+        fiatValue: `${fiat === 'USD' ? '$' : 'HK$'} ${amount * Number(rate)}`,
+      };
+    });
+  }, [fiat]);
+
+  const Gap = useMemoizedFn(() => <View height={6} />);
+
+  const FirstRoute = useMemoizedFn(() => (
+    <YStack flex={1}>
+      <XStack justifyContent={'space-between'} marginHorizontal={12} marginBottom={12}>
+        <Text color={'#141A28'} fontSize={13}>Your Assets</Text>
+        <XStack alignItems={'center'} space={2}>
+          <Text marginLeft={6} fontSize={13} color={'#3898F9'}>Manage</Text>
+          <Image source={require('@/assets/images/Tuning.png')} width={15} height={15} />
+        </XStack>
+      </XStack>
+      <FlashList
+        data={list}
+        renderItem={(item) => <AssetItem {...item.item} />}
+        ItemSeparatorComponent={Gap}
+        estimatedItemSize={50}
+        keyExtractor={(item) => item.name}
+        showsVerticalScrollIndicator={false}
+      />
+    </YStack>
+  ));
+
+  const SecondRoute = useMemoizedFn(() => (
+    <View backgroundColor={'green'} flex={1} />
+  ));
+
+  const ThirdRoute = useMemoizedFn(() => (
+    <View backgroundColor={'purple'} flex={1} />
+  ));
+
+  const renderScene = useMemoizedFn(SceneMap({
+    first: FirstRoute,
+    second: SecondRoute,
+    third: ThirdRoute,
+  }));
+
+  const routes = useMemo(() => {
+    return [
+      { key: 'first', title: 'Crypto' },
+      { key: 'second', title: 'Earn' },
+      { key: 'third', title: 'NFTs' },
+    ];
+  }, []);
+
+  const renderTabBar = useMemoizedFn((props: any) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ height: 0 }}
+      style={{ backgroundColor: 'transparent' }}
+      activeColor={'#141A28'}
+      inactiveColor={'#A0A6B4'}
+    />
+  ));
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <YStack flex={1} paddingTop={insets.top} paddingBottom={insets.bottom}>
+      <XStack justifyContent={'space-between'} marginLeft={16} marginRight={10}>
+        <XStack padding={2} height={32} alignItems={'center'} borderRadius={15} backgroundColor={'#E7EDF2'}>
+          <Image source={require('@/assets/images/Image-header.png')} width={26} height={26} borderRadius={13} />
+          <Text marginLeft={6} color={'black'}>Wallet 1</Text>
+          <Image source={require('@/assets/images/icon_down_arrow.png')} width={14} height={14} marginRight={4} />
+        </XStack>
+
+        <XStack alignItems={'center'} space={2}>
+          <Image source={require('@/assets/images/Scanner@3x.svg.png')} width={30} height={30} padding={4} />
+          <Image source={require('@/assets/images/clock_24@3x.svg.png')} width={30} height={30} padding={4} />
+          <Image source={require('@/assets/images/Settings@3x.svg.png')} width={30} height={30} padding={4} />
+        </XStack>
+      </XStack>
+      <YStack alignItems={'center'} marginVertical={20}>
+        <XStack alignItems={'center'}>
+          <Text marginLeft={6} color={'#A0A6B4'} fontSize={14}>All Mainnets</Text>
+          <Image source={require('@/assets/images/ic_down_gray.png')} width={14} height={14} />
+        </XStack>
+        <Image source={require('@/assets/images/Eye@3x.svg.png')} width={17} height={14} marginTop={14} />
+        <XStack alignItems={'center'} space={8}>
+          <Text color={'#gray'} fontSize={14}>--</Text>
+          <Stack width={4} height={4} borderRadius={2} backgroundColor={'gray'} />
+          <Text color={'#gray'} fontSize={14}>--</Text>
+        </XStack>
+      </YStack>
+      <XStack alignItems={'center'} justifyContent={'space-between'} marginHorizontal={24}>
+        <YStack alignItems={'center'}>
+          <View width={36} height={36} borderRadius={18} backgroundColor={'#C6E7FE'} alignItems={'center'} justifyContent={'center'}>
+            <Image source={require('@/assets/images/ic_tab_buy_selected.png')} width={20} height={20} />
+          </View>
+          <Text marginTop={4} color={'#3898F9'} fontSize={14}>Buy</Text>
+        </YStack>
+        <YStack alignItems={'center'}>
+          <View width={36} height={36} borderRadius={18} backgroundColor={'#C6E7FE'} alignItems={'center'} justifyContent={'center'}>
+            <Image source={require('@/assets/images/iw_send.png')} width={20} height={20} />
+          </View>
+          <Text marginTop={4} color={'#3898F9'} fontSize={14}>Send</Text>
+        </YStack>
+        <YStack alignItems={'center'}>
+          <View width={36} height={36} borderRadius={18} backgroundColor={'#C6E7FE'} alignItems={'center'} justifyContent={'center'}>
+            <Image source={require('@/assets/images/iw_receive.png')} width={20} height={20} />
+          </View>
+          <Text marginTop={4} color={'#3898F9'} fontSize={14}>Receive</Text>
+        </YStack>
+        <YStack alignItems={'center'}>
+          <View width={36} height={36} borderRadius={18} backgroundColor={'#C6E7FE'} alignItems={'center'} justifyContent={'center'}>
+            <Image source={require('@/assets/images/ic_leaf.png')} width={20} height={20} />
+          </View>
+          <Text marginTop={4} color={'#3898F9'} fontSize={14}>Earn</Text>
+        </YStack>
+      </XStack>
+      <View flex={1} marginTop={12}>
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+          renderTabBar={renderTabBar}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welco111me!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </View>
+      <XStack marginTop={6} margin={12} height={36} alignItems={'center'} borderRadius={12} backgroundColor={'#E7EDF2'}>
+        <Image source={require('@/assets/images/search.png')} marginLeft={12} width={14} height={14} />
+        <View flex={1} alignItems={'center'} marginRight={26}>
+          <Text color={'#A0A6B4'}>Browse Web3</Text>
+        </View>
+      </XStack>
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
