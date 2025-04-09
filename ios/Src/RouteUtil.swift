@@ -34,8 +34,6 @@ class RouteUtil: NSObject {
   }
   
   @objc class private func notificationAction(noti: Notification) {
-     /// 获取键盘的位置/高度/时间间隔...
-     print(noti)
     
     DispatchQueue.main.async {
       let rootVc = UIApplication.shared.keyWindow?.rootViewController

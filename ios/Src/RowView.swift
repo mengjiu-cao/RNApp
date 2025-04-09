@@ -92,11 +92,11 @@ class AssetsSection: UIView {
   }
 }
 
-class AccountSection: UIView {
-  let currencyRow = NormalRow(_title: "Display Currency", _info: "$USD")
-  let lang = NormalRow(_title: "Language", _info: "English")
-  let appearance = NormalRow(_title: "Appearance", _info: "Use Device Settings")
-  let notif = NormalRow(_title: "Notifications")
+class AbountSection: UIView {
+  let currencyRow = NormalRow(_title: "Version")
+  let lang = NormalRow(_title: "Terms of Service")
+  let appearance = NormalRow(_title: "Privacy Notice")
+  let notif = NormalRow(_title: "Visit our website")
 
   
   init() {
@@ -166,14 +166,16 @@ class SupportSection: UIView {
   }
 }
 
-class AbountSection: UIView {
-  let currencyRow = NormalRow(_title: "Version")
-  let lang = NormalRow(_title: "Terms of Service")
-  let appearance = NormalRow(_title: "Privacy Notice")
-  let notif = NormalRow(_title: "Visit our website")
-
+class AccountSection: UIView {
+  var currencyRow: NormalRow?
+  let lang = NormalRow(_title: "Language", _info: "English")
+  let appearance = NormalRow(_title: "Appearance", _info: "Use Device Settings")
+  let notif = NormalRow(_title: "Notifications")
+  let closure: () -> Void
+  let btn = UIButton()
   
-  init() {
+  init(_closure: @escaping () -> Void) {
+    closure = _closure
     super.init(frame: .zero)
     setupView()
   }
@@ -187,24 +189,37 @@ class AbountSection: UIView {
     layer.cornerRadius = 12
     layer.masksToBounds = true
     
-    addSubview(currencyRow)
+    let fiat = "$" + (UserDefaults.standard.string(forKey: "fiat-key") ?? "USD")
+    currencyRow = NormalRow(_title: "Display Currency", _info: fiat)
+    addSubview(currencyRow!)
+    
     addSubview(lang)
     addSubview(appearance)
     addSubview(notif)
+    
+    btn.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
+    addSubview(btn)
+  }
+  
+  @objc func btnClick() {
+    print("------------------")
+    closure()
   }
   
   override func layoutSubviews() {
     super.layoutSubviews()
     
-    currencyRow.pin.left().top().right().height(70)
-    lang.pin.left().right().below(of: currencyRow).height(70)
+    currencyRow!.pin.left().top().right().height(70)
+    lang.pin.left().right().below(of: currencyRow!).height(70)
     appearance.pin.left().right().below(of: lang).height(70)
     notif.pin.left().right().below(of: appearance).height(70)
+    
+    btn.pin.left().top().right().height(70)
   }
 }
 
 class Web3ConnectionSection: UIView {
-  let dapps = Normal2Row(_title: "Connected dApps", _info: "0 dApps")
+  let dapps = Normal2Row(_title: "Connected dApps", _info: "0 dApps", _subColor: UIColor(red: 99 / 255.0, green: 110 / 255.0, blue: 126 / 255.0, alpha: 1))
   let netRow = NormalRow(_title: "Networks & RPC")
   let approvalRow = NormalRow(_title: "Approvals")
   
@@ -224,6 +239,7 @@ class Web3ConnectionSection: UIView {
     
     addSubview(netRow)
     addSubview(approvalRow)
+    addSubview(dapps)
   }
   
   override func layoutSubviews() {
@@ -237,10 +253,10 @@ class Web3ConnectionSection: UIView {
 
 class SecuritySection: UIView {
   let recoveryRow = RecoveryRow()
-  let passcodeRow = Normal2Row(_title: "Change Passcode", _info: "You're protected", _subColor: UIColor(red: 99 / 255.0, green: 110 / 255.0, blue: 126 / 255.0, alpha: 1))
+  let passcodeRow = Normal2Row(_title: "Change Passcode", _info: "You're protected")
   let faceRow = FaceIDRow()
   let authRow = AuthRow()
-  let autoAppLock = Normal2Row(_title: "Auto App Lock", _info: "Auto-lock after 1 minute")
+  let autoAppLock = Normal2Row(_title: "Auto App Lock", _info: "Auto-lock after 1 minute", _subColor: UIColor(red: 99 / 255.0, green: 110 / 255.0, blue: 126 / 255.0, alpha: 1))
   
   init() {
     super.init(frame: .zero)
@@ -411,7 +427,7 @@ class NormalRow: UIView {
   override func layoutSubviews() {
     super.layoutSubviews()
     
-    titleLbl.pin.centerLeft(16).top(17).sizeToFit()
+    titleLbl.pin.centerLeft(16).sizeToFit()
     rightIcon.pin.centerRight().marginRight(20)
     subTitleLbl.pin.centerRight(40).sizeToFit()
     bottomLine.pin.left().bottom().right().height(1)
@@ -485,7 +501,7 @@ class AuthRow: UIView {
     addSubview(titleLbl)
     
     subTitleLbl.text = "Add an extra layer of security"
-    subTitleLbl.textColor = UIColor(red: 84 / 255.0, green: 204 / 255.0, blue: 185 / 255.0, alpha: 1)
+    subTitleLbl.textColor = UIColor(red: 99 / 255.0, green: 110 / 255.0, blue: 126 / 255.0, alpha: 1)
     subTitleLbl.font = .systemFont(ofSize: 12)
     addSubview(subTitleLbl)
     

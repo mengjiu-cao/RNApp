@@ -4,7 +4,6 @@ import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import { Image, Stack, Text, View, XStack, YStack, useWindowDimensions } from 'tamagui';
 import { FlashList } from '@shopify/flash-list';
 import { useMemoizedFn } from 'ahooks';
-import { useFocusEffect } from 'expo-router';
 import { Currency } from '@/constants/Currency';
 import { FiatRateUSD } from '@/constants/FiatRateUSD';
 import { FiatRateHKD } from '@/constants/FiatRateHKD';
@@ -23,6 +22,7 @@ export default function Crypto(): React.JSX.Element {
 
   useEffect(() => {
     const subscription = Settings.addDataListener(({ value }) => {
+      console.log('--------------value', value);
       setFiatType(value);
     });
 
@@ -30,7 +30,9 @@ export default function Crypto(): React.JSX.Element {
   }, [setFiatType]);
 
   const list = useMemo(() => {
-    return Currency.map((item) => {
+    console.log('--------------fiatType', fiatType);
+
+    const res = Currency.map((item) => {
       const amount = typeof item.amount === 'bigint' ? Number(item.amount) : item.amount;
       const rate = fiatType === 'USD' ? FiatRateUSD.find(i => i.symbol === item.symbol)?.fiat_rate : FiatRateHKD.find(i => i.symbol === item.symbol)?.fiat_rate;
       return {
@@ -41,11 +43,12 @@ export default function Crypto(): React.JSX.Element {
         fiatValue: `${fiatType === 'USD' ? '$' : 'HK$'} ${amount * Number(rate)}`,
       };
     });
+    console.log('res----', res)
+    return res
   }, [fiatType]);
 
   const Gap = useMemoizedFn(() => <View height={6} />);
-
-  const FirstRoute = useMemoizedFn(() => (
+  const FirstRoute = () => (
     <YStack flex={1}>
       <XStack justifyContent={'space-between'} marginHorizontal={12} marginBottom={12}>
         <Text color={'#141A28'} fontSize={13}>Your Assets</Text>
@@ -63,21 +66,21 @@ export default function Crypto(): React.JSX.Element {
         showsVerticalScrollIndicator={false}
       />
     </YStack>
-  ));
+  );
 
-  const SecondRoute = useMemoizedFn(() => (
+  const SecondRoute = () => (
     <View backgroundColor={'green'} flex={1} />
-  ));
+  );
 
-  const ThirdRoute = useMemoizedFn(() => (
+  const ThirdRoute = () => (
     <View backgroundColor={'purple'} flex={1} />
-  ));
+  );
 
-  const renderScene = useMemoizedFn(SceneMap({
+  const renderScene = SceneMap({
     first: FirstRoute,
     second: SecondRoute,
     third: ThirdRoute,
-  }));
+  });
 
   const routes = useMemo(() => {
     return [
@@ -98,7 +101,7 @@ export default function Crypto(): React.JSX.Element {
   ));
 
   return (
-    <YStack flex={1} paddingTop={insets.top} paddingBottom={insets.bottom}>
+    <YStack flex={1} paddingTop={insets.top} paddingBottom={80}>
       <XStack justifyContent={'space-between'} marginLeft={16} marginRight={10}>
         <XStack padding={2} height={32} alignItems={'center'} borderRadius={15} backgroundColor={'#E7EDF2'}>
           <Image source={require('@/assets/images/Image-header.png')} width={26} height={26} borderRadius={13} />
