@@ -3,4 +3,32 @@
     <string name="expo_system_ui_user_interface_style" translatable="false">automatic</string>
     <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
     <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
+    <string name="wallet_1">Wallet 1</string>
+    <string name="security">Security</string>
+    <string name="recovery_phrase">Recovery Phrase</string>
+    <string name="not_backed_up">Not backed up</string>
+    <string name="connect_to_crypto_com_app">Connect to Crypto.com App</string>
+    <string name="change_passcode">Change Passcode</string>
+    <string name="you_re_protected">You\'re protected</string>
+    <string name="enable_2_factor_authentication">Enable 2-Factor Authentication</string>
+    <string name="add_an_extra_layer_of_security">Add an extra layer of security</string>
+    <string name="auto_app_lock">Auto App Lock</string>
+    <string name="auto_lock_after_1_minute">Auto-lock after 1 minute</string>
+    <string name="connect_to_crypto_com">Connect to Crypto.com</string>
+    <string name="transfer_coins_easily_between_crypto_com_onchain_and_the_crypto_com_app">Transfer coins easily between Crypto.com Onchain and the Crypto.com App.</string>
+    <string name="read_more">Read More</string>
+    <string name="assets">Assets</string>
+    <string name="manage_tokens">Manage Tokens</string>
+    <string name="transaction_history">Transaction History</string>
+    <string name="connected_dapps">Connected dApps</string>
+    <string name="_0_dapps">0 dApps</string>
+    <string name="networks_rpc"><![CDATA[Networks & RPC]]></string>
+    <string name="web3_connection">Web3 connection</string>
+    <string name="account">Account</string>
+    <string name="display_currency">Display Currency</string>
+    <string name="language">Language</string>
+    <string name="english">English</string>
+    <string name="use_device_settings">Use Device Settings</string>
+    <string name="notifications">Notifications</string>
+    <string name="appearance">Appearance</string>
 </resources>
