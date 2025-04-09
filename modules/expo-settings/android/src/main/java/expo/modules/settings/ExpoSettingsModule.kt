@@ -6,6 +6,9 @@ import androidx.core.os.bundleOf
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.types.Enumerable
+// import org.greenrobot.eventbus
+
+const val CLIPBOARD_CHANGED_EVENT_NAME = "onClipboardChanged"
 
 class ExpoSettingsModule : Module() {
   override fun definition() = ModuleDefinition {
@@ -14,13 +17,21 @@ class ExpoSettingsModule : Module() {
     Events("onChange")
 
     Function("setFiat") { theme: FiatType ->
-      getPreferences().edit().putString("fiat-key", theme.value).commit()
-      this@ExpoSettingsModule.sendEvent("onChange", bundleOf("value" to theme.value))
+      // getPreferences().edit().putString("fiat-key", theme.value).commit()
+      // this@ExpoSettingsModule.sendEvent("onChange", bundleOf("value" to theme.value))
     }
 
     Function("getFiat") {
       return@Function getPreferences().getString("fiat-key", FiatType.USD.value)
     }
+
+    // OnStartObserving {
+    //   EventBus.getDefault().register(this)
+    // }
+
+    // OnStopObserving {
+    //   EventBus.getDefault().unregister(this)
+    // }
   }
 
   private val context
@@ -29,6 +40,20 @@ class ExpoSettingsModule : Module() {
   private fun getPreferences(): SharedPreferences {
     return context.getSharedPreferences(context.packageName + ".settings", Context.MODE_PRIVATE)
   }
+
+  // private val clipboardManager: ClipboardManager?
+  //   get() = appContext.reactContext?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+
+  // private val listener = ClipboardManager.OnPrimaryClipChangedListener {
+  //   clipboardManager?.primaryClipDescription?.let { clip ->
+  //     this@ClipboardModule.sendEvent(
+  //       CLIPBOARD_CHANGED_EVENT_NAME,
+  //       bundleOf(
+  //         "contentTypes" to availableContentTypes(clip)
+  //       )
+  //     )
+  //   }
+  // }
 }
 
 enum class FiatType(val value: String) : Enumerable {

@@ -11,7 +11,7 @@ import AssetItem from '@/components/AssetItem';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Settings from '@/modules/expo-settings';
 import { FiatType } from '@/modules/expo-settings';
-import { Pressable } from 'react-native';
+import { Platform, Pressable } from 'react-native';
 
 export default function Crypto(): React.JSX.Element {
   const layout = useWindowDimensions();
@@ -101,7 +101,7 @@ export default function Crypto(): React.JSX.Element {
   ));
 
   return (
-    <YStack flex={1} paddingTop={insets.top} paddingBottom={80}>
+    <YStack flex={1} paddingTop={insets.top} paddingBottom={Platform.OS === 'ios' ? 80 : 0}>
       <XStack justifyContent={'space-between'} marginLeft={16} marginRight={10}>
         <XStack padding={2} height={32} alignItems={'center'} borderRadius={15} backgroundColor={'#E7EDF2'}>
           <Image source={require('@/assets/images/Image-header.png')} width={26} height={26} borderRadius={13} />
