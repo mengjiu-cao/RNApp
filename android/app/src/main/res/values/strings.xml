@@ -31,4 +31,5 @@
     <string name="use_device_settings">Use Device Settings</string>
     <string name="notifications">Notifications</string>
     <string name="appearance">Appearance</string>
+    <string name="settings">Settings</string>
 </resources>
