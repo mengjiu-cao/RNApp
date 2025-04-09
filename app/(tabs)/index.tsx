@@ -110,13 +110,13 @@ export default function Crypto(): React.JSX.Element {
         </XStack>
 
         <XStack alignItems={'center'} gap={2}>
-          <Image source={require('@/assets/images/Scanner@3x.svg.png')} width={30} height={30} padding={4} />
-          <Image source={require('@/assets/images/clock_24@3x.svg.png')} width={30} height={30} padding={4} />
-          <Pressable onPress={() => {
+          <Image source={require('@/assets/images/Scanner@3x.svg.png')} width={22} height={22} margin={4} />
+          <Image source={require('@/assets/images/clock_24@3x.svg.png')} width={22} height={22} margin={4} />
+          <Pressable style={{ padding: 4}} onPress={() => {
             console.log('------------> Settings.toSettingPage()')
             Settings.toSettingPage()
           }}>
-            <Image source={require('@/assets/images/Settings@3x.svg.png')} width={30} height={30} padding={4} />
+            <Image source={require('@/assets/images/Settings@3x.svg.png')} width={22} height={22}  />
           </Pressable>
         </XStack>
       </XStack>
