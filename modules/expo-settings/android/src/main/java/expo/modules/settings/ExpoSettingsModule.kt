@@ -1,6 +1,7 @@
 package expo.modules.settings
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.core.os.bundleOf
 import expo.modules.kotlin.modules.Module
@@ -25,13 +26,11 @@ class ExpoSettingsModule : Module() {
       return@Function getPreferences().getString("fiat-key", FiatType.USD.value)
     }
 
-    // OnStartObserving {
-    //   EventBus.getDefault().register(this)
-    // }
-
-    // OnStopObserving {
-    //   EventBus.getDefault().unregister(this)
-    // }
+      Function("toSettingPage") {
+        val intent = Intent("com.anonymous.RNApp.setting11")
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(intent)
+    }
   }
 
   private val context
