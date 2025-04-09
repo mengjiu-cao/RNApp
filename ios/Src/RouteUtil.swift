@@ -40,7 +40,9 @@ class RouteUtil: NSObject {
     DispatchQueue.main.async {
       let rootVc = UIApplication.shared.keyWindow?.rootViewController
       let currentVc = getCurrentVcFrom(rootVc!)
-      currentVc.present(UIViewController.init(), animated: true)
+      
+      let nav = UINavigationController(rootViewController: SettingPage(nibName: nil, bundle: nil))
+      currentVc.present(nav, animated: true)
     }
   }
 }
