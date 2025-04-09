@@ -9,12 +9,16 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/tool_bar"
+        />
     <FrameLayout
         android:id="@+id/header"
         android:layout_width="122dp"
         android:layout_height="117dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="70dp">
         <ImageView
             android:id="@+id/imageView"
             android:layout_gravity="center"
@@ -596,6 +600,7 @@
         android:orientation="vertical"
         >
         <RelativeLayout
+            android:id="@+id/fiatView"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             >
@@ -610,7 +615,7 @@
                 android:textSize="14sp"
                 tools:ignore="RelativeOverlap" />
             <TextView
-                android:id="@+id/display_currency"
+                android:id="@+id/displayCurrency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

@@ -27,6 +27,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SettingActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="Settings"
             android:exported="false">
             <intent-filter>
                 <!--指定当前Activity可以响应的action和category-->
