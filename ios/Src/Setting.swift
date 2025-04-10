@@ -107,7 +107,7 @@ class SettingPage: UIViewController {
   
   func configFiat(fiat: FiatType) {
     accountSection.currencyRow?.subTitleLbl.text = "$" + fiat.rawValue
-    accountSection.currencyRow?.subTitleLbl.pin.sizeToFit(.width)
+    accountSection.currencyRow?.subTitleLbl.pin.sizeToFit()
     
     UserDefaults.standard.setValue(fiat.rawValue, forKey: "fiat-key")
     UserDefaults.standard.synchronize()
