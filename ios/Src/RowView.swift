@@ -390,7 +390,7 @@ class Normal2Row: UIView {
 
 class NormalRow: UIView {
   private let titleLbl = UILabel(frame: .zero)
-  private let subTitleLbl = UILabel(frame: .zero)
+  let subTitleLbl = UILabel(frame: .zero)
   private let rightIcon = UIImageView(image: UIImage(named: "ic_right_icon"))
   private let bottomLine = UIView(frame: .zero)
   private let info: String?

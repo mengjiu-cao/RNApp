@@ -106,11 +106,14 @@ class SettingPage: UIViewController {
   }
   
   func configFiat(fiat: FiatType) {
+    accountSection.currencyRow?.subTitleLbl.text = "$" + fiat.rawValue
+    accountSection.currencyRow?.subTitleLbl.pin.sizeToFit(.width)
+    
     UserDefaults.standard.setValue(fiat.rawValue, forKey: "fiat-key")
     UserDefaults.standard.synchronize()
     NotificationCenter.default.post(name: Notification.Name("FIAT_CHANGED_EVENT_NAME"), object: nil)
     
-    self.dismiss(animated: true)
+//    self.dismiss(animated: true)
   }
   
   func displayRate() {
